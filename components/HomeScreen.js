@@ -1,32 +1,49 @@
 import posts from "../post"
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomeScreen() {
+  
   const [post, setPost] = useState(posts)
+
   const navigation = useNavigation();
 
   function handleDetails(id) {
-    navigation.navigate("PostDetails", { id: id })
+    console.log(typeof id, "enviando id de detalles")
+     if(id !== "undefined") {
+       navigation.navigate("PostDetails", {id:id, posts:post})
+     }
   }
 
-  function addPosts() {
-    const newPost = {
-      id: 4,
-      title: "Nuevo posts para el blog",
-      content: "Creando Nuevo Post para mi blog de los JW",
-      category: "learning",
-      createdAt: "2026-04-12"
-    }
-    setPost([...posts, newPost])
+ function addPosts() {
+  let newId;
+
+  if (post.length === 0) {
+    newId = 1;
+  } else {
+    const lastIndex = post.length - 1;
+    newId = post[lastIndex].id + 1;
   }
 
+  const newPost = {
+    id: newId,
+    title: "Nuevo posts para el blog",
+    content: "Creando Nuevo Post para mi blog de los JW",
+    category: "learning",
+    createdAt: "2026-04-12"
+  };
+
+  setPost([...post, newPost]);
+}
   function handleDeletePost (id) {
-    const data = posts.filter((item)=> item.id !== id)
-    setPost(data)
+    const data = post.filter((item)=> item.id !== id)
+    console.log(data)
+    if(data) {
+      setPost(data)
+    }
   }
-
+  
   return (
     <View >
       <FlatList
@@ -46,6 +63,7 @@ export default function HomeScreen() {
         }}
       />
       <Button title="Agregar post" onPress={addPosts} />
+      {post.length <= 0 && (<Text>No hay post</Text>)}
     </View>
   )
 }
