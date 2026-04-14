@@ -4,11 +4,12 @@ import { useEffect, useState } from "react"
 
 export default function PostDetails({ route }) {
 
-  const { id, } = route.params
+  const { posts, id } = route.params
   const [post, setPost] = useState({})
+
   const setContent = () => {
     const data = posts.find(p => p.id == id)
-    setPost(data)
+     setPost(data)
   }
 
   useEffect(() => {
